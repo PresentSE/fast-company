@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import User from "./user";
 import api from "../api"; //delete
 import SearchStatus from "./searchStatus"; //delete
+import Qualitie from "./qualitie"; //delete
 
 const Users = () => {
   const [users, setUsers] = useState(api.users.fetchAll());
@@ -32,12 +33,12 @@ const Users = () => {
                 <td>{user.name}</td>
                 <td>
                   {user.qualities.map((item) => (
-                    <span
-                      className={"badge m-1 bg-" + item.color}
+                    <Qualitie
                       key={item._id}
-                    >
-                      {item.name}
-                    </span>
+                      color={item.color}
+                      name={item.name}
+                      _id={item._id}
+                    />
                   ))}
                 </td>
                 <td>{user.profession.name}</td>
