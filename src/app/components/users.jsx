@@ -1,19 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import User from "./user";
-import api from "../api"; //delete
-import SearchStatus from "./searchStatus"; //delete
-import Qualitie from "./qualitie"; //delete
 
-const Users = () => {
-  const [users, setUsers] = useState(api.users.fetchAll());
-
-  const handleDelete = (userId) => {
-    setUsers(users.filter((user) => user._id !== userId));
-  };
-
+const Users = ({ users, ...rest }) => {
+  //console.log(users);
+  //console.log(rest);
   return (
     <>
-      <SearchStatus length={users.length} />
       {users.length > 0 && (
         <table className="table">
           <thead>
@@ -29,34 +21,7 @@ const Users = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user._id}>
-                <td>{user.name}</td>
-                <td>
-                  {user.qualities.map((item) => (
-                    <Qualitie
-                      key={item._id}
-                      color={item.color}
-                      name={item.name}
-                      _id={item._id}
-                    />
-                  ))}
-                </td>
-                <td>{user.profession.name}</td>
-                <td>{user.completedMeetings}</td>
-                <td>{user.rate} /5</td>
-                <td>
-                  <i className="bi bi-suit-heart"></i>
-                  <i className="bi bi-suit-heart-fill"></i>
-                </td>
-                <td>
-                  <button
-                    onClick={() => handleDelete(user._id)}
-                    className="btn btn-danger"
-                  >
-                    delete
-                  </button>
-                </td>
-              </tr>
+              <User key={user._id} {...rest} {...user} />
             ))}
           </tbody>
         </table>
