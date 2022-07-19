@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Pagination from "./pagination";
 import User from "./user";
+import { paginate } from "../utils/paginate";
 
 const Users = ({ users, ...rest }) => {
   const count = users.length;
@@ -12,12 +13,8 @@ const Users = ({ users, ...rest }) => {
     setCurrentPage(pageIndex);
   };
 
-  const paginate = (items, pageNumber, pageSize) => {
-    const startIndex = (pageNumber - 1) * pageSize;
-    return [...items].splice(startIndex, pageSize);
-  };
   const userCrop = paginate(users, currentPage, pageSize);
-  console.log(userCrop);
+
   return (
     <>
       {count > 0 && (
