@@ -6,10 +6,18 @@ const Users = ({ users, ...rest }) => {
   const count = users.length;
   const pageSize = 4;
   const [currentPage, setCurrentPage] = useState(1);
+
   const handlePageChange = (pageIndex) => {
     console.log("page:", pageIndex);
     setCurrentPage(pageIndex);
   };
+
+  const paginate = (items, pageNumber, pageSize) => {
+    const startIndex = (pageNumber - 1) * pageSize;
+    return [...items].splice(startIndex, pageSize);
+  };
+  const userCrop = paginate(users, currentPage, pageSize);
+  console.log(userCrop);
   return (
     <>
       {count > 0 && (
@@ -26,7 +34,7 @@ const Users = ({ users, ...rest }) => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {userCrop.map((user) => (
               <User key={user._id} {...rest} {...user} />
             ))}
           </tbody>
