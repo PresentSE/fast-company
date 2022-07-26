@@ -13,3 +13,5 @@ const fetchAll = () =>
             resolve(professions);
         }, 2000);
     });
+
+export default { fetchAll };
