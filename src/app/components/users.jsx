@@ -11,13 +11,14 @@ const Users = ({ users, ...rest }) => {
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
+    const [selectedProf, setSelectedProf] = useState();
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data));
     }, []);
 
-    const handleProfessionSelect = (params) => {
-        console.log(params);
+    const handleProfessionSelect = (item) => {
+        setSelectedProf(item);
     };
 
     const handlePageChange = (pageIndex) => {
@@ -30,6 +31,7 @@ const Users = ({ users, ...rest }) => {
         <>
             {professions && (
                 <GroupList
+                    selectedItem={selectedProf}
                     items={professions}
                     onItemSelect={handleProfessionSelect}
                 />
