@@ -6,8 +6,8 @@ import PropTypes from "prop-types";
 import GroupList from "./groupList";
 import api from "../api";
 
-const Users = ({ users, ...rest }) => {
-    const count = users.length;
+const Users = ({ users: allUsers, ...rest }) => {
+    const count = allUsers.length;
     const pageSize = 4;
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
@@ -25,16 +25,30 @@ const Users = ({ users, ...rest }) => {
         setCurrentPage(pageIndex);
     };
 
-    const userCrop = paginate(users, currentPage, pageSize);
+    const filteredUsers = selectedProf
+        ? allUsers.filter((user) => user.profession === selectedProf)
+        : allUsers;
+    const userCrop = paginate(filteredUsers, currentPage, pageSize);
+    const clearFilter = () => {
+        setSelectedProf();
+    };
 
     return (
         <>
             {professions && (
-                <GroupList
-                    selectedItem={selectedProf}
-                    items={professions}
-                    onItemSelect={handleProfessionSelect}
-                />
+                <>
+                    <GroupList
+                        selectedItem={selectedProf}
+                        items={professions}
+                        onItemSelect={handleProfessionSelect}
+                    />
+                    <button
+                        className="btn btn-secondary mt-2"
+                        onClick={clearFilter}
+                    >
+                        Очистить
+                    </button>
+                </>
             )}
             {count > 0 && (
                 <table className="table">
