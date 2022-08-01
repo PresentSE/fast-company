@@ -1,5 +1,5 @@
 import React from "react";
-import Qualitie from "./qualitie";
+import Quality from "./quality";
 import BookMark from "./bookmark";
 import PropTypes from "prop-types";
 
@@ -12,26 +12,24 @@ const User = ({
     rate,
     onDelete,
     bookmark,
-    onBookMark
+    onToggleBookMark
 }) => {
     return (
         <tr key={_id}>
             <td>{name}</td>
             <td>
-                {qualities.map((item) => (
-                    <Qualitie
-                        key={item._id}
-                        color={item.color}
-                        name={item.name}
-                        _id={item._id}
-                    />
+                {qualities.map((qual) => (
+                    <Quality {...qual} key={qual._id} />
                 ))}
             </td>
             <td>{profession.name}</td>
             <td>{completedMeetings}</td>
             <td>{rate} /5</td>
             <td>
-                <BookMark status={bookmark} onClick={() => onBookMark(_id)} />
+                <BookMark
+                    status={bookmark}
+                    onClick={() => onToggleBookMark(_id)}
+                />
             </td>
             <td>
                 <button
@@ -47,13 +45,13 @@ const User = ({
 User.propTypes = {
     _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    qualities: PropTypes.array.isRequired,
+    qualities: PropTypes.array,
     profession: PropTypes.object.isRequired,
     completedMeetings: PropTypes.number.isRequired,
     rate: PropTypes.number.isRequired,
     onDelete: PropTypes.func.isRequired,
-    bookmark: PropTypes.bool.isRequired,
-    onBookMark: PropTypes.func.isRequired
+    bookmark: PropTypes.bool,
+    onToggleBookMark: PropTypes.func.isRequired
 };
 
 export default User;

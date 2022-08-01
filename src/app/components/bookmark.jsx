@@ -5,11 +5,7 @@ const BookMark = ({ status, ...rest }) => {
     // console.log(rest);
     return (
         <button {...rest}>
-            <i
-                className={
-                    "bi bi-suit-heart" + (status === true ? "-fill" : "")
-                }
-            ></i>
+            <i className={"bi bi-suit-heart" + (status ? "-fill" : "")}></i>
         </button>
     );
 };
