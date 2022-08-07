@@ -1,5 +1,5 @@
 import React from "react";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
 import _ from "lodash";
 
 const TableBody = ({ data, columns }) => {
@@ -27,8 +27,8 @@ const TableBody = ({ data, columns }) => {
 };
 
 TableBody.propTypes = {
-    data: Proptypes.array.isRequired,
-    columns: Proptypes.object.isRequired
+    data: PropTypes.array.isRequired,
+    columns: PropTypes.object.isRequired
 };
 
 export default TableBody;
