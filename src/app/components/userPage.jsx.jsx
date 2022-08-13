@@ -15,7 +15,6 @@ const UserPage = ({ id }) => {
         history.push("/users");
     };
 
-    console.log(userFound);
     if (userFound) {
         return (
             <div>
