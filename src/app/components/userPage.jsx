@@ -25,7 +25,11 @@ const UserPage = ({ userId }) => {
             </div>
         );
     } else {
-        return <h1>Loading</h1>;
+        return (
+            <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>
+        );
     }
 };
 

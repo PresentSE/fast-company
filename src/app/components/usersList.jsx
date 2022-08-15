@@ -111,7 +111,11 @@ const UsersList = () => {
             </div>
         );
     }
-    return "loading...";
+    return (
+        <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </div>
+    );
 };
 UsersList.propTypes = {
     users: PropTypes.array
