@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import api from "../api";
 import QualitiesList from "./qualitieslist";
 import { useHistory } from "react-router-dom";
+import Loader from "./loader";
 
 const UserPage = ({ userId }) => {
     const history = useHistory();
@@ -25,11 +26,7 @@ const UserPage = ({ userId }) => {
             </div>
         );
     } else {
-        return (
-            <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>
-        );
+        return <Loader />;
     }
 };
 

@@ -7,6 +7,7 @@ import GroupList from "./groupList";
 import SearchStatus from "./searchStatus";
 import UserTable from "./usersTable";
 import _ from "lodash";
+import Loader from "./loader";
 const UsersList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
@@ -111,11 +112,7 @@ const UsersList = () => {
             </div>
         );
     }
-    return (
-        <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </div>
-    );
+    return <Loader />;
 };
 UsersList.propTypes = {
     users: PropTypes.array
