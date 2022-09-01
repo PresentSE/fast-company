@@ -17,7 +17,7 @@ export const professions = [
 const fetchAll = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
-            resolve(professions);
+            resolve(professionsObject);
         }, 2000);
     });
 
