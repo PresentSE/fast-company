@@ -9,35 +9,35 @@ import MultiSelectField from "../common/form/multiSelect";
 import Loader from "../common/loader";
 
 const UserEdit = ({ userId }) => {
-    const [data, setData] = useState([]);
-    const [userToEdit, setUserToEdit] = useState({});
+    const [data, setData] = useState({
+        name: "",
+        email: "",
+        profession: "",
+        sex: "",
+        qualities: []
+    });
+
     const [errors, setErrors] = useState({});
     const [professions, setProfession] = useState({});
     const [qualities, setQualities] = useState();
 
     useEffect(() => {
-        api.users.fetchAll().then((data) => {
-            setData(data);
-            console.log(data);
-        });
         api.users.getById(userId).then((data) => {
-            setUserToEdit({
+            setData({
                 name: data.name,
                 email: data.email,
                 profession: data.profession.name,
                 sex: data.sex,
-                qualities: data.qualities.map((quaitie) => ({
-                    label: quaitie.name,
-                    value: quaitie._id
-                }))
+                qualities: data.qualities
             });
         });
         api.professions.fetchAll().then((data) => setProfession(data));
         api.qualities.fetchAll().then((data) => setQualities(data));
     }, []);
-    console.log(userToEdit);
+    console.log(data);
 
     const handleChange = (target) => {
+        console.log(target);
         setData((prevState) => ({ ...prevState, [target.name]: target.value }));
     };
 
@@ -50,26 +50,9 @@ const UserEdit = ({ userId }) => {
                 message: "Email введен некорректно"
             }
         },
-        password: {
-            isRequired: { message: "Пароль обязателен для заполнения" },
-            isCapitalSymbol: {
-                message: "Пароль должен содержать хотя бы одну заглавную букву"
-            },
-            isContainDigits: {
-                message: "Пароль должен содержать хотя бы одно число"
-            },
-            min: {
-                message: "Пароль должен состоять минимум из 8 символов",
-                value: 8
-            }
-        },
-        profession: {
-            isRequired: { message: "Обязательно выберите вашу профессию" }
-        },
-        licence: {
+        name: {
             isRequired: {
-                message:
-                    "Вы не можете использовать наш сервис без подтверждения лицензионного соглашения"
+                message: "Обязательно введите имя"
             }
         }
     };
@@ -93,7 +76,7 @@ const UserEdit = ({ userId }) => {
         console.log(data);
     };
 
-    if (userToEdit.qualities && Object.keys(professions).length !== 0) {
+    if (data.qualities && Object.keys(professions).length !== 0) {
         return (
             <div className="container mt-5">
                 <div className="row">
@@ -102,24 +85,24 @@ const UserEdit = ({ userId }) => {
                             <TextField
                                 label="Имя"
                                 name="name"
-                                value={userToEdit.name}
+                                value={data.name}
                                 onChange={handleChange}
+                                error={errors.name}
                             />
                             <TextField
                                 label="Электронная почта"
                                 type="email"
                                 name="email"
-                                value={userToEdit.email}
+                                value={data.email}
                                 onChange={handleChange}
                                 error={errors.email}
                             />
                             <SelectField
                                 onChange={handleChange}
                                 options={professions}
-                                defaultOption={userToEdit.professions}
-                                name="professions"
-                                value={userToEdit.professions}
-                                error={errors.profession}
+                                defaultOption="Choose..."
+                                name="profession"
+                                value={data.profession.name}
                                 label="Выбери свою профессию"
                             />
 
@@ -129,7 +112,7 @@ const UserEdit = ({ userId }) => {
                                     { name: "Female", value: "female" },
                                     { name: "Other", value: "other" }
                                 ]}
-                                value={userToEdit.sex}
+                                value={data.sex}
                                 name="sex"
                                 onChange={handleChange}
                                 label="Выберите ваш пол"
@@ -138,7 +121,12 @@ const UserEdit = ({ userId }) => {
                             <MultiSelectField
                                 options={qualities}
                                 onChange={handleChange}
-                                defaultValue={userToEdit.qualities}
+                                defaultValue={data.qualities.map(
+                                    (qualitie) => ({
+                                        label: qualitie.name,
+                                        value: qualitie._id
+                                    })
+                                )}
                                 name="qualities"
                                 label="Выберите ваши качества"
                             />
@@ -148,7 +136,7 @@ const UserEdit = ({ userId }) => {
                                 disabled={!isValid}
                                 className="btn btn-primary w-100 mx-auto"
                             >
-                                Submit
+                                Обновить
                             </button>
                         </form>
                     </div>
