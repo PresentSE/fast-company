@@ -24,26 +24,21 @@ const UserEdit = ({ userId }) => {
     const history = useHistory();
 
     useEffect(() => {
-        if (!data.name) {
-            console.log(!data.name);
-            api.users.getById(userId).then((data) => {
-                setData({
-                    name: data.name,
-                    email: data.email,
-                    profession: data.profession,
-                    sex: data.sex,
-                    qualities: data.qualities
-                });
+        api.users.getById(userId).then((data) => {
+            setData({
+                name: data.name,
+                email: data.email,
+                profession: data.profession,
+                sex: data.sex,
+                qualities: data.qualities
             });
+        });
 
-            api.professions.fetchAll().then((data) => setProfession(data));
-            api.qualities.fetchAll().then((data) => setQualities(data));
-        }
+        api.professions.fetchAll().then((data) => setProfession(data));
+        api.qualities.fetchAll().then((data) => setQualities(data));
     }, []);
-    console.log(data);
 
     const handleChange = (target) => {
-        console.log(target);
         setData((prevState) => ({ ...prevState, [target.name]: target.value }));
     };
 
@@ -64,11 +59,11 @@ const UserEdit = ({ userId }) => {
     };
 
     const transformData = (data) => {
-        if (data.qualities[0].label) {
+        let userForLocalStore = JSON.parse(JSON.stringify(data));
+        if (userForLocalStore.qualities[0].label) {
             const qualArray = [];
             Object.keys(qualities).forEach((key) => {
-                data.qualities.forEach((item) => {
-                    console.log(item);
+                userForLocalStore.qualities.forEach((item) => {
                     if (qualities[key]._id === item.value) {
                         qualArray.push({
                             _id: item.value,
@@ -78,27 +73,27 @@ const UserEdit = ({ userId }) => {
                     }
                 });
             });
-            setData((prevState) => ({
-                ...prevState,
+            userForLocalStore = {
+                ...userForLocalStore,
                 qualities: qualArray
-            }));
+            };
         } else {
             console.log("качества в порядке");
         }
 
-        if (!data.profession.name) {
+        if (!userForLocalStore.profession.name) {
             Object.keys(professions).forEach((key) => {
-                if (professions[key]._id === data.profession) {
-                    console.log(professions[key]._id);
-                    setData((prevState) => ({
-                        ...prevState,
+                if (professions[key]._id === userForLocalStore.profession) {
+                    userForLocalStore = {
+                        ...userForLocalStore,
                         profession: professions[key]
-                    }));
+                    };
                 }
             });
         } else {
             console.log("профессии в порядке");
         }
+        return userForLocalStore;
     };
 
     useEffect(() => {
@@ -117,10 +112,8 @@ const UserEdit = ({ userId }) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        transformData(data);
-        console.log(data);
         api.users
-            .update(userId, data)
+            .update(userId, transformData(data))
             .then(() => history.push(`/users/${userId}`));
     };
 
