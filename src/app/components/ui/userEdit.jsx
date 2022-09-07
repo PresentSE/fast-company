@@ -7,6 +7,7 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelect";
 import Loader from "../common/loader";
+import { useHistory } from "react-router-dom";
 
 const UserEdit = ({ userId }) => {
     const [data, setData] = useState({
@@ -20,19 +21,24 @@ const UserEdit = ({ userId }) => {
     const [errors, setErrors] = useState({});
     const [professions, setProfession] = useState({});
     const [qualities, setQualities] = useState();
+    const history = useHistory();
 
     useEffect(() => {
-        api.users.getById(userId).then((data) => {
-            setData({
-                name: data.name,
-                email: data.email,
-                profession: data.profession.name,
-                sex: data.sex,
-                qualities: data.qualities
+        if (!data.name) {
+            console.log(!data.name);
+            api.users.getById(userId).then((data) => {
+                setData({
+                    name: data.name,
+                    email: data.email,
+                    profession: data.profession,
+                    sex: data.sex,
+                    qualities: data.qualities
+                });
             });
-        });
-        api.professions.fetchAll().then((data) => setProfession(data));
-        api.qualities.fetchAll().then((data) => setQualities(data));
+
+            api.professions.fetchAll().then((data) => setProfession(data));
+            api.qualities.fetchAll().then((data) => setQualities(data));
+        }
     }, []);
     console.log(data);
 
@@ -57,6 +63,44 @@ const UserEdit = ({ userId }) => {
         }
     };
 
+    const transformData = (data) => {
+        if (data.qualities[0].label) {
+            const qualArray = [];
+            Object.keys(qualities).forEach((key) => {
+                data.qualities.forEach((item) => {
+                    console.log(item);
+                    if (qualities[key]._id === item.value) {
+                        qualArray.push({
+                            _id: item.value,
+                            name: item.label,
+                            color: qualities[key].color
+                        });
+                    }
+                });
+            });
+            setData((prevState) => ({
+                ...prevState,
+                qualities: qualArray
+            }));
+        } else {
+            console.log("качества в порядке");
+        }
+
+        if (!data.profession.name) {
+            Object.keys(professions).forEach((key) => {
+                if (professions[key]._id === data.profession) {
+                    console.log(professions[key]._id);
+                    setData((prevState) => ({
+                        ...prevState,
+                        profession: professions[key]
+                    }));
+                }
+            });
+        } else {
+            console.log("профессии в порядке");
+        }
+    };
+
     useEffect(() => {
         validate();
     }, [data]);
@@ -73,7 +117,11 @@ const UserEdit = ({ userId }) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
+        transformData(data);
         console.log(data);
+        api.users
+            .update(userId, data)
+            .then(() => history.push(`/users/${userId}`));
     };
 
     if (data.qualities && Object.keys(professions).length !== 0) {
@@ -100,9 +148,9 @@ const UserEdit = ({ userId }) => {
                             <SelectField
                                 onChange={handleChange}
                                 options={professions}
-                                defaultOption="Choose..."
+                                defaultOption={data.profession.name}
                                 name="profession"
-                                value={data.profession.name}
+                                value={data.profession._id}
                                 label="Выбери свою профессию"
                             />
 
