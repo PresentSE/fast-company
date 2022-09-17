@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import TextField from "../common/form/textField";
+import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
+import TextField from "../common/form/textField";
 import api from "../../api";
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
-import MultiSelectField from "../common/form/multiSelect";
+import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
 
 const RegisterForm = () => {
@@ -16,19 +16,56 @@ const RegisterForm = () => {
         qualities: [],
         licence: false
     });
+    const [qualities, setQualities] = useState([]);
+    const [professions, setProfession] = useState([]);
     const [errors, setErrors] = useState({});
-    const [professions, setProfession] = useState();
-    const [qualities, setQualities] = useState({});
 
-    useEffect(() => {
-        api.professions.fetchAll().then((data) => setProfession(data));
-        api.qualities.fetchAll().then((data) => setQualities(data));
-    }, []);
-
-    const handleChange = (target) => {
-        setData((prevState) => ({ ...prevState, [target.name]: target.value }));
+    const getProfessionById = (id) => {
+        for (const prof of professions) {
+            if (prof.value === id) {
+                return { _id: prof.value, name: prof.label };
+            }
+        }
+    };
+    const getQualities = (elements) => {
+        const qualitiesArray = [];
+        for (const elem of elements) {
+            for (const quality in qualities) {
+                if (elem.value === qualities[quality].value) {
+                    qualitiesArray.push({
+                        _id: qualities[quality].value,
+                        name: qualities[quality].label,
+                        color: qualities[quality].color
+                    });
+                }
+            }
+        }
+        return qualitiesArray;
     };
 
+    useEffect(() => {
+        api.professions.fetchAll().then((data) => {
+            const professionsList = Object.keys(data).map((professionName) => ({
+                label: data[professionName].name,
+                value: data[professionName]._id
+            }));
+            setProfession(professionsList);
+        });
+        api.qualities.fetchAll().then((data) => {
+            const qualitiesList = Object.keys(data).map((optionName) => ({
+                value: data[optionName]._id,
+                label: data[optionName].name,
+                color: data[optionName].color
+            }));
+            setQualities(qualitiesList);
+        });
+    }, []);
+    const handleChange = (target) => {
+        setData((prevState) => ({
+            ...prevState,
+            [target.name]: target.value
+        }));
+    };
     const validatorConfig = {
         email: {
             isRequired: {
@@ -39,11 +76,13 @@ const RegisterForm = () => {
             }
         },
         password: {
-            isRequired: { message: "Пароль обязателен для заполнения" },
+            isRequired: {
+                message: "Пароль обязателен для заполнения"
+            },
             isCapitalSymbol: {
                 message: "Пароль должен содержать хотя бы одну заглавную букву"
             },
-            isContainDigits: {
+            isContainDigit: {
                 message: "Пароль должен содержать хотя бы одно число"
             },
             min: {
@@ -52,7 +91,9 @@ const RegisterForm = () => {
             }
         },
         profession: {
-            isRequired: { message: "Обязательно выберите вашу профессию" }
+            isRequired: {
+                message: "Обязательно выберите вашу профессию"
+            }
         },
         licence: {
             isRequired: {
@@ -61,26 +102,27 @@ const RegisterForm = () => {
             }
         }
     };
-
     useEffect(() => {
         validate();
     }, [data]);
-
     const validate = () => {
         const errors = validator(data, validatorConfig);
         setErrors(errors);
         return Object.keys(errors).length === 0;
     };
-
     const isValid = Object.keys(errors).length === 0;
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+        const { profession, qualities } = data;
+        console.log({
+            ...data,
+            profession: getProfessionById(profession),
+            qualities: getQualities(qualities)
+        });
     };
-
     return (
         <form onSubmit={handleSubmit}>
             <TextField
@@ -99,15 +141,14 @@ const RegisterForm = () => {
                 error={errors.password}
             />
             <SelectField
-                onChange={handleChange}
-                options={professions}
+                label="Выбери свою профессию"
                 defaultOption="Choose..."
-                name="professions"
+                options={professions}
+                name="profession"
+                onChange={handleChange}
                 value={data.profession}
                 error={errors.profession}
-                label="Выберите вашу профессию"
             />
-
             <RadioField
                 options={[
                     { name: "Male", value: "male" },
@@ -119,13 +160,11 @@ const RegisterForm = () => {
                 onChange={handleChange}
                 label="Выберите ваш пол"
             />
-
             <MultiSelectField
                 options={qualities}
                 onChange={handleChange}
                 defaultValue={data.qualities}
                 name="qualities"
-                value={data.qualities}
                 label="Выберите ваши качества"
             />
             <CheckBoxField
@@ -136,11 +175,10 @@ const RegisterForm = () => {
             >
                 Подтвердить <a>лицензионное соглашение</a>
             </CheckBoxField>
-
             <button
+                className="btn btn-primary w-100 mx-auto"
                 type="submit"
                 disabled={!isValid}
-                className="btn btn-primary w-100 mx-auto"
             >
                 Submit
             </button>
