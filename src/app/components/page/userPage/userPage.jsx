@@ -16,13 +16,17 @@ const UserPage = ({ userId }) => {
     };
     if (user) {
         return (
-            <div>
-                <h1> {user.name}</h1>
-                <h2>Профессия: {user.profession.name}</h2>
-                <Qualities qualities={user.qualities} />
-                <p>completedMeetings: {user.completedMeetings}</p>
-                <h2>Rate: {user.rate}</h2>
-                <button onClick={handleClick}>Изменить</button>
+            <div className="container">
+                <div className="row gutters-sm">
+                    <div className="col-md-4 mb-3">
+                        <h1> {user.name}</h1>
+                        <h2>Профессия: {user.profession.name}</h2>
+                        <Qualities qualities={user.qualities} />
+                        <p>completedMeetings: {user.completedMeetings}</p>
+                        <h2>Rate: {user.rate}</h2>
+                        <button onClick={handleClick}>Изменить</button>
+                    </div>
+                </div>
             </div>
         );
     } else {
