@@ -8,7 +8,7 @@ const Users = () => {
     const params = useParams();
     const { userId, edit } = params;
     if (edit && userId) {
-        return <UserEdit userId={userId} />;
+        return <UserEdit />;
     } else {
         return <>{userId ? <UserPage userId={userId} /> : <UsersListPage />}</>;
     }

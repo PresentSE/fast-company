@@ -4,7 +4,6 @@ import NavBar from "./components/ui/navBar";
 import Login from "./layouts/login";
 import Main from "./layouts/main";
 import Users from "./layouts/users";
-// import UserPage from "./components/userPage.jsx";
 
 function App() {
     return (
