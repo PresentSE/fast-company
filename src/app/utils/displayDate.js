@@ -24,6 +24,18 @@ export function displayDate(data) {
         })}`;
     }
     return (
-        date.getFullYear() + "." + (date.getMonth() + 1) + "_" + date.getDate()
+        `${
+            String(date.getDate()).length === 1
+                ? "0" + date.getDate()
+                : date.getDate()
+        }` +
+        "." +
+        `${
+            String(date.getMonth()).length === 1
+                ? "0" + (date.getMonth() + 1)
+                : date.getMonth() + 1
+        }` +
+        "." +
+        date.getFullYear()
     );
 }
