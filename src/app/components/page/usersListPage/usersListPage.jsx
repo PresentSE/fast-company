@@ -9,21 +9,22 @@ import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 import Loader from "../../common/loader";
 import UserSearch from "../../userSearch";
+import { useUser } from "../../../hooks/useUsers";
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const pageSize = 8;
-    const [users, setUsers] = useState();
     const [searchText, setSearchText] = useState("");
     const [foundedUsers, setFoundedUsers] = useState();
 
-    useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data));
-    }, []);
+    const { users } = useUser();
+    console.log(users);
+
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user._id !== userId));
+        // setUsers(users.filter((user) => user._id !== userId));
+        console.log(userId);
     };
     const handleToggleBookMark = (id) => {
         const newArray = users.map((user) => {
@@ -32,7 +33,8 @@ const UsersListPage = () => {
             }
             return user;
         });
-        setUsers(newArray);
+        console.log(newArray);
+        // setUsers(newArray);
     };
 
     useEffect(() => {

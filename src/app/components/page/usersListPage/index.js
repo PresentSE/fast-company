@@ -1,2 +1,2 @@
-import UsersListPage from "./userPage";
+import UsersListPage from "./usersListPage";
 export default UsersListPage;
