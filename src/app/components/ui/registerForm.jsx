@@ -23,6 +23,10 @@ const RegisterForm = () => {
         value: q._id
     }));
     const { professions } = useProfessions();
+    const professionsList = professions.map((p) => ({
+        label: p.name,
+        value: p._id
+    }));
     const [errors, setErrors] = useState({});
 
     const handleChange = (target) => {
@@ -109,7 +113,7 @@ const RegisterForm = () => {
             <SelectField
                 label="Выбери свою профессию"
                 defaultOption="Choose..."
-                options={professions}
+                options={professionsList}
                 name="profession"
                 onChange={handleChange}
                 value={data.profession}

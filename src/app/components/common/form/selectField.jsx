@@ -40,10 +40,10 @@ const SelectField = ({
                 <option disabled value="">
                     {defaultOption}
                 </option>
-                {optionsArray.length > 0 &&
+                {optionsArray &&
                     optionsArray.map((option) => (
                         <option key={option.value} value={option.value}>
-                            {option.name}
+                            {option.label}
                         </option>
                     ))}
             </select>
