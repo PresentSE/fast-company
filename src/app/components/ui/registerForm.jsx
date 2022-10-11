@@ -18,6 +18,10 @@ const RegisterForm = () => {
         licence: false
     });
     const { qualities } = useQualities();
+    const qualitiesList = qualities.map((q) => ({
+        label: q.name,
+        value: q._id
+    }));
     const { professions } = useProfessions();
     const [errors, setErrors] = useState({});
 
@@ -78,8 +82,13 @@ const RegisterForm = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+        const newData = {
+            ...data,
+            qualities: data.qualities.map((q) => q.value)
+        };
+        console.log(newData);
     };
+
     return (
         <form onSubmit={handleSubmit}>
             <TextField
@@ -118,9 +127,8 @@ const RegisterForm = () => {
                 label="Выберите ваш пол"
             />
             <MultiSelectField
-                options={qualities}
+                options={qualitiesList}
                 onChange={handleChange}
-                defaultValue={data.qualities}
                 name="qualities"
                 label="Выберите ваши качества"
             />
