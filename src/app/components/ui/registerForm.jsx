@@ -17,6 +17,7 @@ const RegisterForm = () => {
         password: "",
         profession: "",
         sex: "male",
+        name: "",
         qualities: [],
         licence: false
     });
@@ -106,6 +107,13 @@ const RegisterForm = () => {
             <TextField
                 label="Электронная почта"
                 name="email"
+                value={data.email}
+                onChange={handleChange}
+                error={errors.email}
+            />
+            <TextField
+                label="Имя"
+                name="тфьу"
                 value={data.email}
                 onChange={handleChange}
                 error={errors.email}
