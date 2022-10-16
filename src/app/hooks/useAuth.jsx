@@ -20,7 +20,7 @@ export const useAuth = () => {
 };
 
 const AuthProvider = ({ children }) => {
-    const [currentUser, setUser] = useState({});
+    const [currentUser, setUser] = useState();
     const [error, setError] = useState(null);
 
     async function logIn({ email, password }) {
