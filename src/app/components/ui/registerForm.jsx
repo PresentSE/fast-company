@@ -49,6 +49,15 @@ const RegisterForm = () => {
                 message: "Email введен некорректно"
             }
         },
+        name: {
+            isRequired: {
+                message: "Имя обязательно для заполнения"
+            },
+            min: {
+                message: "Имя должно состоять минимум из 3 символов",
+                value: 3
+            }
+        },
         password: {
             isRequired: {
                 message: "Пароль обязателен для заполнения"
@@ -113,10 +122,10 @@ const RegisterForm = () => {
             />
             <TextField
                 label="Имя"
-                name="тфьу"
-                value={data.email}
+                name="name"
+                value={data.name}
                 onChange={handleChange}
-                error={errors.email}
+                error={errors.name}
             />
             <TextField
                 label="Пароль"
