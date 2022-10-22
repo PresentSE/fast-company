@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { validator } from "../../../utils/validator";
-import api from "../../../api";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
@@ -13,7 +12,7 @@ import { useProfessions } from "../../../hooks/useProfession";
 import { useAuth } from "../../../hooks/useAuth";
 
 const EditUserPage = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, editUser } = useAuth();
     const { qualities, isLoading: qualitiesLoading } = useQualities();
     const qualitiesList = transformData(qualities);
     const { professions, isLoading: professionsLoading } = useProfessions();
@@ -22,7 +21,14 @@ const EditUserPage = () => {
     const { userId } = useParams();
     const [errors, setErrors] = useState({});
 
-    console.log(history);
+    const checkCurrentUser = () => {
+        if (currentUser._id !== userId) {
+            history.push("/users/" + currentUser._id + "/edit/");
+        }
+    };
+    useEffect(() => {
+        checkCurrentUser();
+    }, []);
 
     const getQualities = (elements) => {
         const qualitiesArray = [];
@@ -36,43 +42,40 @@ const EditUserPage = () => {
         }
         return qualitiesArray;
     };
+
     function transformData(data) {
         return data.map((d) => ({ label: d.name, value: d._id }));
     }
 
     const [data, setData] = useState({
-        name: currentUser.name,
-        email: currentUser.email,
-        profession: currentUser.profession,
-        sex: currentUser.sex,
+        ...currentUser,
         qualities: transformData(getQualities(currentUser.qualities))
     });
 
-    const getProfessionById = (id) => {
-        for (const prof of professions) {
-            if (prof.value === id) {
-                return { _id: prof.value, name: prof.label };
-            }
-        }
-    };
+    // const getProfessionById = (id) => {
+    //     for (const prof of professions) {
+    //         if (prof.value === id) {
+    //             return { _id: prof.value, name: prof.label };
+    //         }
+    //     }
+    // };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        const { profession, qualities } = data;
-        api.users
-            .update(userId, {
-                ...data,
-                profession: getProfessionById(profession),
-                qualities: getQualities(qualities)
-            })
-            .then((data) => history.push(`/users/${data._id}`));
-        console.log({
+        const { qualities } = data;
+        const updatedUser = {
             ...data,
-            profession: getProfessionById(profession),
-            qualities: getQualities(qualities)
-        });
+            qualities: qualities.map((q) => q.value)
+        };
+        console.log(updatedUser);
+        try {
+            await editUser(updatedUser);
+            history.push(`/users/${currentUser._id}`);
+        } catch (error) {
+            setErrors(error);
+        }
     };
 
     const validatorConfig = {
@@ -99,6 +102,7 @@ const EditUserPage = () => {
             ...prevState,
             [target.name]: target.value
         }));
+        console.log(data);
     };
 
     const validate = () => {
@@ -113,8 +117,7 @@ const EditUserPage = () => {
             <BackHistoryButton />
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
-                    {(!data || !qualitiesLoading || !professionsLoading) &&
-                    Object.keys(professions).length > 0 ? (
+                    {!data || !qualitiesLoading || !professionsLoading ? (
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 label="Имя"
