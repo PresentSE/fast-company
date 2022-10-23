@@ -52,14 +52,6 @@ const EditUserPage = () => {
         qualities: transformData(getQualities(currentUser.qualities))
     });
 
-    // const getProfessionById = (id) => {
-    //     for (const prof of professions) {
-    //         if (prof.value === id) {
-    //             return { _id: prof.value, name: prof.label };
-    //         }
-    //     }
-    // };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = validate();
