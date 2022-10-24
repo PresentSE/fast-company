@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { validator } from "../../../utils/validator";
 import TextField from "../../common/form/textField";
 import SelectField from "../../common/form/selectField";
@@ -18,17 +18,7 @@ const EditUserPage = () => {
     const { professions, isLoading: professionsLoading } = useProfessions();
     const professionsList = transformData(professions);
     const history = useHistory();
-    const { userId } = useParams();
     const [errors, setErrors] = useState({});
-
-    const checkCurrentUser = () => {
-        if (currentUser._id !== userId) {
-            history.push("/users/" + currentUser._id + "/edit/");
-        }
-    };
-    useEffect(() => {
-        checkCurrentUser();
-    }, []);
 
     const getQualities = (elements) => {
         const qualitiesArray = [];
