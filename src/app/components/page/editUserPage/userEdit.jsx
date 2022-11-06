@@ -7,20 +7,27 @@ import RadioField from "../../common/form/radioField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import Loader from "../../common/loader";
 import BackHistoryButton from "../../common/backButton";
-import { useQualities } from "../../../hooks/useQualities";
+
 import { useProfessions } from "../../../hooks/useProfession";
 import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import {
+    getQualities,
+    getQualitiesLoadingStatus
+} from "../../../store/qualities";
 
 const EditUserPage = () => {
     const { currentUser, editUser } = useAuth();
-    const { qualities, isLoading: qualitiesLoading } = useQualities();
+    const qualities = useSelector(getQualities());
     const qualitiesList = transformData(qualities);
     const { professions, isLoading: professionsLoading } = useProfessions();
     const professionsList = transformData(professions);
     const history = useHistory();
     const [errors, setErrors] = useState({});
 
-    const getQualities = (elements) => {
+    const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
+
+    const changeQualities = (elements) => {
         const qualitiesArray = [];
 
         for (const elem of elements) {
@@ -39,7 +46,7 @@ const EditUserPage = () => {
 
     const [data, setData] = useState({
         ...currentUser,
-        qualities: transformData(getQualities(currentUser.qualities))
+        qualities: transformData(changeQualities(currentUser.qualities))
     });
 
     const handleSubmit = async (e) => {
