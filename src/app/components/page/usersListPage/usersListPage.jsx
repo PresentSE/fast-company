@@ -9,8 +9,12 @@ import _ from "lodash";
 import Loader from "../../common/loader";
 import UserSearch from "../../userSearch";
 import { useUser } from "../../../hooks/useUsers";
-import { useProfessions } from "../../../hooks/useProfession";
 import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import {
+    getProfessions,
+    getProfessionsLoadingStatus
+} from "../../../store/professions";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +26,8 @@ const UsersListPage = () => {
 
     const { users } = useUser();
     const { currentUser } = useAuth();
-    const { isLoading: professionsLoading, professions } = useProfessions();
+    const professions = useSelector(getProfessions());
+    const professionsLoading = useSelector(getProfessionsLoadingStatus());
 
     const handleDelete = (userId) => {
         // setUsers(users.filter((user) => user._id !== userId));
