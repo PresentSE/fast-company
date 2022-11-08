@@ -8,13 +8,13 @@ import UserTable from "../../ui/usersTable";
 import _ from "lodash";
 import Loader from "../../common/loader";
 import UserSearch from "../../userSearch";
-import { useUser } from "../../../hooks/useUsers";
 import { useAuth } from "../../../hooks/useAuth";
 import { useSelector } from "react-redux";
 import {
     getProfessions,
     getProfessionsLoadingStatus
 } from "../../../store/professions";
+import { getUsersList } from "../../../store/users";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,8 +23,7 @@ const UsersListPage = () => {
     const pageSize = 8;
     const [searchText, setSearchText] = useState("");
     const [foundedUsers, setFoundedUsers] = useState();
-
-    const { users } = useUser();
+    const users = useSelector(getUsersList());
     const { currentUser } = useAuth();
     const professions = useSelector(getProfessions());
     const professionsLoading = useSelector(getProfessionsLoadingStatus());

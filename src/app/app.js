@@ -11,12 +11,14 @@ import Main from "./layouts/main";
 import Users from "./layouts/users";
 import { loadProfessionsList } from "./store/professions";
 import { loadQualitiesList } from "./store/qualities";
+import { loadUsersList } from "./store/users";
 
 function App() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(loadQualitiesList());
         dispatch(loadProfessionsList());
+        dispatch(loadUsersList());
     }, []);
     return (
         <div>
