@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
-// import { useHistory } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
 import { login } from "../../store/users";
 import history from "../../utils/history";
@@ -13,7 +13,6 @@ const LoginForm = () => {
         password: "",
         stayOn: false
     });
-    // const history = useHistory();
 
     const dispatch = useDispatch();
     const [errors, setErrors] = useState({});
