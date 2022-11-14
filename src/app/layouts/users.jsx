@@ -10,7 +10,6 @@ import { getCurrentUserId } from "../store/users";
 const Users = () => {
     const params = useParams();
     const { userId, edit } = params;
-    console.log(userId, edit);
     const currentUserId = useSelector(getCurrentUserId());
 
     return (
