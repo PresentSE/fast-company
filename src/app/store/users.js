@@ -1,7 +1,7 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
+import userService from "../services/user.service";
 import authService from "../services/auth.service";
 import localStorageService from "../services/localStorage.service";
-import userService from "../services/user.service";
 import getRandomInt from "../utils/getRandomInt";
 import history from "../utils/history";
 
@@ -117,18 +117,16 @@ export const signUp =
             dispatch(authRequestFailed(error.message));
         }
     };
-
 export const logOut = () => (dispatch) => {
     localStorageService.removeAuthData();
     dispatch(userLoggedOut());
     history.push("/");
 };
-
 function createUser(payload) {
     return async function (dispatch) {
         dispatch(userCreateRequested());
         try {
-            const { content } = userService.create(payload);
+            const { content } = await userService.create(payload);
             dispatch(userCreated(content));
             history.push("/users");
         } catch (error) {
@@ -153,8 +151,7 @@ export const getCurrentUserData = () => (state) => {
         ? state.users.entities.find((u) => u._id === state.users.auth.userId)
         : null;
 };
-
-export const getUserBuId = (userId) => (state) => {
+export const getUserById = (userId) => (state) => {
     if (state.users.entities) {
         return state.users.entities.find((u) => u._id === userId);
     }

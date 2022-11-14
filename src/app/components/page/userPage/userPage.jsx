@@ -7,10 +7,10 @@ import Loader from "../../common/loader";
 import Comments from "../../ui/comments";
 import { CommentsProvider } from "../../../hooks/useComments";
 import { useSelector } from "react-redux";
-import { getUserBuId } from "../../../store/users";
+import { getUserById } from "../../../store/users";
 
 const UserPage = ({ userId }) => {
-    const user = useSelector(getUserBuId(userId));
+    const user = useSelector(getUserById(userId));
     if (user) {
         return (
             <div className="container">
