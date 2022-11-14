@@ -14,9 +14,11 @@ import {
     getQualitiesLoadingStatus
 } from "../../../store/qualities";
 import { getProfessions } from "../../../store/professions";
+import { getCurrentUserData } from "../../../store/users";
 
 const EditUserPage = () => {
-    const { currentUser, editUser } = useAuth();
+    const { editUser } = useAuth();
+    const currentUser = useSelector(getCurrentUserData());
     const qualities = useSelector(getQualities());
     const qualitiesList = transformData(qualities);
     const professions = useSelector(getProfessions());
