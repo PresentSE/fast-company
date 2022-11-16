@@ -27,7 +27,7 @@ const commentsSlice = createSlice({
             state.entities.push(action.payload);
         },
         commentRemoved: (state, action) => {
-            state.entities = state.entities = state.entities.filter(
+            state.entities = state.entities.filter(
                 (c) => c._id !== action.payload
             );
         }
